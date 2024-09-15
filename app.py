@@ -9,7 +9,15 @@ app = Flask(__name__)
 
 # AWS S3 setup
 S3_BUCKET = 'website-image-serve'
-s3_client = boto3.client('s3')
+S3_REGION = os.getenv('AWS_DEFAULT_REGION', 'us-east-1')  # Replace 'us-east-1' with your default region
+
+# Initialize S3 client using environment variables
+s3_client = boto3.client(
+    's3',
+    region_name=S3_REGION,
+    aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+)
 
 def generate_presigned_url(object_name, expiration=3600):
     try:
